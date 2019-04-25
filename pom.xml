@@ -51,7 +51,11 @@
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.3</version>
+                <!--<version>1.5.3</version>-->
+                <!--위 1.5.3 으로 빌드 시에 문제 발생 ==> /usr/bin/stty: 'standard input': Inappropriate ioctl for device -->
+                <!--https://github.com/asciidoctor/asciidoctor-maven-plugin/issues/351-->
+                <!--https://github.com/asciidoctor/asciidoctor/issues/2869-->
+                <version>1.5.8</version>
                 <executions>
                     <execution>
                         <id>generate-docs</id>
@@ -59,9 +63,15 @@
                         <goals>
                             <goal>process-asciidoc</goal>
                         </goals>
+                        <!--@see https://www.baeldung.com/spring-rest-docs-->
                         <configuration>
                             <backend>html</backend>
                             <doctype>book</doctype>
+                            <attributes>
+                                <snippets>${project.build.directory}/generated-snippets</snippets>
+                            </attributes>
+                            <sourceDirectory>${project.build.directory}/generated-snippets</sourceDirectory>
+                            <outputDirectory>target/generated-docs</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -72,6 +82,32 @@
                         <version>2.0.2.RELEASE</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <!--https://github.com/jruby/jruby/issues/1614-->
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.outputDirectory}/static/docs
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${project.build.directory}/generated-docs
+                                    </directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
