@@ -10,9 +10,9 @@
     </parent>
     <groupId>com.glqdlt.ex</groupId>
     <artifactId>spring-rest-docs</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>spring-rest-docs</name>
-    <description>Demo project for Spring Boot</description>
+    <description>spring-rest-docs-test..</description>
 
     <properties>
         <java.version>1.8</java.version>
